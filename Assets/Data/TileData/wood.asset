@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6432ea3b45e3d9f4dbf71e0ee4814e98, type: 3}
+  m_Name: wood
+  m_EditorClassIdentifier: 
+  tiles:
+  - {fileID: 11400000, guid: c64717ff2a516a04c813c0fc4aa5a85e, type: 2}
+  - {fileID: 11400000, guid: 585f6248e709a7e449af297446500df6, type: 2}
+  - {fileID: 11400000, guid: 54ad85c44e565024ab86757dd6b8eaa7, type: 2}
+  - {fileID: 11400000, guid: 021b5689ce192604783c3d331716f73d, type: 2}
+  - {fileID: 11400000, guid: 3c2e6d4ac64cec64dbb55edd4c5a75f7, type: 2}
+  - {fileID: 11400000, guid: d719cc0e0e823e3438c1ec244f6dfb4a, type: 2}
+  - {fileID: 11400000, guid: 58261b520eecac3498dfc59c51bb32f3, type: 2}
+  - {fileID: 11400000, guid: bb20edba46d397a4e906f66cbba2bcc4, type: 2}
+  - {fileID: 11400000, guid: 001efbbb27ab29b4fa594969da0ee17d, type: 2}
+  - {fileID: 11400000, guid: 6c2fb7dfbd46aed4880eab3897005d21, type: 2}
+  - {fileID: 11400000, guid: f3fcb65b4aa0aa84883a53d799e35a65, type: 2}
+  - {fileID: 11400000, guid: dfab74ae642f42548a440830ccc067ff, type: 2}
+  - {fileID: 11400000, guid: 3c4f02baf2dd24040ae4cdfc0341f67f, type: 2}
+  - {fileID: 11400000, guid: ca766a72fcd5a2341b7b099ff7ba50a1, type: 2}
+  - {fileID: 11400000, guid: 506620da4cdce584ca46c533c31427c9, type: 2}
+  - {fileID: 11400000, guid: a7e9d01de00aba749a510ebc00e75a7e, type: 2}
+  - {fileID: 11400000, guid: 2c433fae178b92b44a793d740743475d, type: 2}
+  - {fileID: 11400000, guid: c18dda61dc3548a4fbb0c2b8ea27569d, type: 2}
+  - {fileID: 11400000, guid: fa04e12553fc87441bbead07df489dd6, type: 2}
+  - {fileID: 11400000, guid: 9ced52fec0d89a942b266dda51145d32, type: 2}
+  - {fileID: 11400000, guid: f748180e281d21f449a8c1a7ed903c61, type: 2}
+  - {fileID: 11400000, guid: 416d414fedd63194ca587b61e83f827b, type: 2}
+  - {fileID: 11400000, guid: ca6cdcd739f99234a86e78e7e0e23609, type: 2}
+  - {fileID: 11400000, guid: c4b62ebcec002a849a580f457f3a2604, type: 2}
+  - {fileID: 11400000, guid: 8f97b90c9109aee49a44650c90cdc4c0, type: 2}
+  Name: wood
+  TimeToBreak: 4
