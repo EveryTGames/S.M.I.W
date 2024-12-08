@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 
 public static class events
@@ -24,5 +25,12 @@ public static class events
     }
     //-------------------
 
-    //end of events for playerController---------------------------------------------
+    //end of events for playerController-----------------------------------------------
+
+    //start of events for uiShowItemData ----------------------------------------------
+    public static event Action<List<TileData>> onItemDataRetrived;
+    public static void TriggerShowItem(List<TileData> state)
+    {
+        onItemDataRetrived?.Invoke(state);
+    }
 }

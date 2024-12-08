@@ -39,4 +39,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c4b62ebcec002a849a580f457f3a2604, type: 2}
   - {fileID: 11400000, guid: 8f97b90c9109aee49a44650c90cdc4c0, type: 2}
   Name: wood
+  description: it is brown this time :)
   TimeToBreak: 4

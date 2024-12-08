@@ -12,6 +12,11 @@ public class TileData : ScriptableObject
     public string Name;
     //-------------------------------------
 
+    [Tooltip("the description of the object representing the tile")]
+    [TextArea]
+    public string description;
+    //-------------------------------------
+
     [Tooltip("the the time to break this tile")]
     public float TimeToBreak;
 

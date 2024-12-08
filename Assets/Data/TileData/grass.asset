@@ -64,4 +64,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 87845589274782542967ccdbfa7686b7, type: 2}
   - {fileID: 11400000, guid: 275feca5a737fa64c84c036a5ce0a4b4, type: 2}
   Name: grass
+  description: something grean maybe :)
   TimeToBreak: 1

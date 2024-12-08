@@ -58,4 +58,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 03268bdb8896f1144b3e64bfc051a2c6, type: 2}
   - {fileID: 11400000, guid: e0b7d30847d724a45b4bbeb048689c46, type: 2}
   Name: leaves
+  description: another green thing
   TimeToBreak: 0.5

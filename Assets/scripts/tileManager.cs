@@ -1,8 +1,6 @@
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Unity.Mathematics;
-using Unity.VisualScripting;
+
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -40,14 +38,14 @@ public class tileManager : MonoBehaviour
         // Debug.Log(Input.GetAxis("Mouse X"));
         bool mouseXZero = Mathf.Approximately(Input.GetAxis("Mouse X"), 0);
         bool mouseYZero = Mathf.Approximately(Input.GetAxis("Mouse Y"), 0);
-        if ((!mouseXZero || !mouseYZero))
+        if (!mouseXZero || !mouseYZero)
         {//the mouse moved after a steady
             if (waitingForTheNextMove)
             {
 
-                timeSinceTheLastSteady = 0;
                 waitingForTheNextMove = false;
             }
+            timeSinceTheLastSteady = 0;
         }
         else
         { // the mouse is in the steady state
@@ -73,7 +71,7 @@ public class tileManager : MonoBehaviour
                 {
                     if (cellpos == lastCellPos)
                     {
-                        break;
+                        return;
                     }
 
                     lastCellPos = cellpos;
@@ -92,6 +90,9 @@ public class tileManager : MonoBehaviour
                     }
                 }
             }
+           
+                events.TriggerShowItem(clickedTileDatas);
+            
 
 
         }

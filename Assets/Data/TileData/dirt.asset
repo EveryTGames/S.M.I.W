@@ -120,4 +120,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7c1f5ce28e2694c469ebca2377614370, type: 2}
   - {fileID: 11400000, guid: 3eee56e3844c9304dae8ce98db940083, type: 2}
   Name: Dirt
+  description: juist a dirt :)
   TimeToBreak: 1
