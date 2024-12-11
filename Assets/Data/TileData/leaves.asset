@@ -60,3 +60,4 @@ MonoBehaviour:
   Name: leaves
   description: another green thing
   TimeToBreak: 0.5
+  breakable: 1

@@ -3,18 +3,26 @@ using UnityEngine;
 
 using static events;
 
+using DG.Tweening;
+using UnityEngine.Tilemaps;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
+   
+
+ 
 public class playerControler : MonoBehaviour
 {
 
     public static playerControler pc; //not needed currently 
-    [SerializeField] bool grounded = false;
-    [SerializeField] bool forwardHead = false;
-    [SerializeField] bool forwardLeg = false;
-     Animator an;
-     Rigidbody2D rb;
+    bool grounded = false;
+    bool forwardHead = false;
+    bool forwardLeg = false;
+    Animator an;
+    Rigidbody2D rb;
 
-
+   [SerializeField] Inventory inventory;
     private void Awake()
     {
         if (pc == null)
@@ -25,6 +33,7 @@ public class playerControler : MonoBehaviour
         {
             Debug.LogWarning("multiple player controller ditected");
         }
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -35,10 +44,11 @@ public class playerControler : MonoBehaviour
 
 
         //subscribe to events
+        onTileBreakEnd += OnTileBreakEnd;
         onGroundCheck += OnGroundCheck;
         onForwardLegCheck += OnForwardLegCheck;
         onForwardHeadCheck += OnForwardHeadCheck;
-
+        onItemDataRetrived += OnItemDataRetrived;
     }
     [SerializeField] float speed = 0.1f;
     [SerializeField] float jump_Force = 10f;
@@ -66,6 +76,7 @@ public class playerControler : MonoBehaviour
             Application.Quit();
         }
 
+
     }
 
     void FixedUpdate()
@@ -85,7 +96,6 @@ public class playerControler : MonoBehaviour
         rb.AddForce(new Vector3(x * speed * Time.deltaTime, 0, 0));
 
     }
-
     float roundTo1(float value)
     {
         return Mathf.Round(value * 10f) / 10f;
@@ -130,7 +140,7 @@ public class playerControler : MonoBehaviour
             else
             {
                 //it was true before(stay)
-               an.SetBool("Grounded_bool", true);
+                an.SetBool("Grounded_bool", true);
             }
         }
         else
@@ -147,6 +157,28 @@ public class playerControler : MonoBehaviour
     void OnForwardHeadCheck(bool state)
     {
         forwardHead = state;
+    }
+
+    void OnTileBreakEnd((TileData, TileBase) data, Vector3Int cellPos)
+    {
+        inventory.addItem(data.Item1);
+        
+    }
+
+    void OnItemDataRetrived(List<(TileData, TileBase)> datas, Vector3Int cellpos)
+    {
+
+        if (Input.GetKey(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            foreach ((TileData, TileBase) data in datas)
+            {
+                if (data.Item1.breakable)
+                {
+                    TriggerTileBreakStart(data, cellpos);
+                }
+            }
+        }
+
     }
 
 }

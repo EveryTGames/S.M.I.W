@@ -41,3 +41,4 @@ MonoBehaviour:
   Name: wood
   description: it is brown this time :)
   TimeToBreak: 4
+  breakable: 1

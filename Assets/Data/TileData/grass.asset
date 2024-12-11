@@ -66,3 +66,4 @@ MonoBehaviour:
   Name: grass
   description: something grean maybe :)
   TimeToBreak: 1
+  breakable: 1

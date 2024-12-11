@@ -122,3 +122,4 @@ MonoBehaviour:
   Name: Dirt
   description: juist a dirt :)
   TimeToBreak: 1
+  breakable: 1

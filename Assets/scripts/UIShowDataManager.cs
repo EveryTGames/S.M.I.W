@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using static events;
+
+
 
 public class UIShowDataManager : MonoBehaviour
 {
@@ -23,14 +26,15 @@ public class UIShowDataManager : MonoBehaviour
     }
     Dictionary<TileData, Animator> oldData = new Dictionary<TileData, Animator>();//old data
 
-    void OnItemDataRetrived(List<TileData> newData) // Takes the new data
+    void OnItemDataRetrived(List<(TileData,TileBase)> newData,Vector3Int cellpos) // Takes the new data
     {
-    Debug.Log(newData.Count);
+        //Debug.Log(newData.Count);
 
 
         //The hashset idea is from chatgpt :)
         // Convert the new data to a HashSet for quick lookup
-        HashSet<TileData> newDataSet = new HashSet<TileData>(newData);
+       HashSet<TileData> newDataSet = new HashSet<TileData>(newData.Select(tuple => tuple.Item1));
+
 
         // Remove items not in new data and trigger fade
         foreach (TileData item in oldData.Keys.ToList()) // ToList() to avoid modifying the collection during iteration
@@ -50,8 +54,8 @@ public class UIShowDataManager : MonoBehaviour
                 Intializer initializer = Instantiate(ItemDataPrefabe, gameObject.transform).GetComponent<Intializer>();
                 initializer.assign(item);
 
-                
-                 oldData.Add(item, initializer.transform.GetComponentInChildren<Animator>());
+
+                oldData.Add(item, initializer.transform.GetComponentInChildren<Animator>());
             }
         }
     }

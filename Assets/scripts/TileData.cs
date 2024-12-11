@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "TileData", menuName = "TileData", order = 0)]
+[Serializable]
 public class TileData : ScriptableObject
 {
     [Tooltip("the tiles that will carry this data")]
@@ -20,6 +22,9 @@ public class TileData : ScriptableObject
     [Tooltip("the the time to break this tile")]
     public float TimeToBreak;
 
+    [Tooltip("is this tile breakable?")]
+
+    public bool breakable;
     public override string ToString()
     {
         return base.ToString();
