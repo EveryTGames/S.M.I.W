@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6432ea3b45e3d9f4dbf71e0ee4814e98, type: 3}
   m_Name: dirt
   m_EditorClassIdentifier: 
+  ID: 0
+  UIprefabe: {fileID: 6832354705550214456, guid: c4532a1d7f6aebd43a8520038edb8a02, type: 3}
+  worldPrefabe: {fileID: 7185202663553053041, guid: 1e8c257b14d7b554f8380d0e82adad51, type: 3}
+  dimention: {x: 1, y: 1}
   tiles:
   - {fileID: 11400000, guid: 140774298d0dc8448b94aacc46a71461, type: 2}
   - {fileID: 11400000, guid: c3c065ddf8bd72344b5496ad1fcb7090, type: 2}

@@ -7,12 +7,12 @@ using static events;
 public class tileManager : MonoBehaviour
 {
     [SerializeField] List<Tilemap> tilemaps;
-    [SerializeField] List<TileData> tileDatas;
+    [SerializeField] List<ItemData> tileDatas;
 
-    Dictionary<TileBase, TileData> tileBasData = new Dictionary<TileBase, TileData>();
+    Dictionary<TileBase, ItemData> tileBasData = new Dictionary<TileBase, ItemData>();
     private void Awake()
     {
-        foreach (TileData _TileData in tileDatas)
+        foreach (ItemData _TileData in tileDatas)
         {
             foreach (TileBase _TileBase in _TileData.tiles)
             {
@@ -33,7 +33,7 @@ public class tileManager : MonoBehaviour
     [SerializeField] float steadyThreshold = 1f;
     public float timeSinceTheLastSteady = 0;
     bool waitingForTheNextMove = false; // if true that means the mouse didnt movce since the last show of info
-    List<(TileData, TileBase)> clickedTileDatas = new List<(TileData, TileBase)>();
+    List<(ItemData, TileBase)> clickedTileDatas = new List<(ItemData, TileBase)>();
 
     Vector3Int lastCellPos = new Vector3Int();
     Vector3Int lastCellPos2 = new Vector3Int();
@@ -153,7 +153,7 @@ public class tileManager : MonoBehaviour
         foreach (Tilemap map in tilemaps)
         {
 
-            TileData tile;
+            ItemData tile;
 
 
             TileBase retrivedTile = map.GetTile(cellpos);
@@ -178,7 +178,7 @@ public class tileManager : MonoBehaviour
 
     static Sequence sequence;
     int ff = 0;
-    void OnTileBreakStart((TileData, TileBase) data, Vector3Int cellPos)
+    void OnTileBreakStart((ItemData, TileBase) data, Vector3Int cellPos)
     {
         if (sequence != null)
         {

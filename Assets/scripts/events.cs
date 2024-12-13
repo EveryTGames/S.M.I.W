@@ -30,8 +30,8 @@ public static class events
     //end of events for playerController-----------------------------------------------
 
     //start of events for uiShowItemData ----------------------------------------------
-    public static event Action<List<(TileData, TileBase)>, Vector3Int> onItemDataRetrived;
-    public static void TriggerShowItem(List<(TileData, TileBase)> state, Vector3Int cellpos)
+    public static event Action<List<(ItemData, TileBase)>, Vector3Int> onItemDataRetrived;
+    public static void TriggerShowItem(List<(ItemData, TileBase)> state, Vector3Int cellpos)
     {
         onItemDataRetrived?.Invoke(state, cellpos);
     }
@@ -71,14 +71,14 @@ public static class events
 
     //start of events for breaking --------------------------------------------------
 
-    public static event Action<(TileData, TileBase), Vector3Int> onTileBreakStart;
-    public static void TriggerTileBreakStart((TileData, TileBase) data, Vector3Int cellpos)
+    public static event Action<(ItemData, TileBase), Vector3Int> onTileBreakStart;
+    public static void TriggerTileBreakStart((ItemData, TileBase) data, Vector3Int cellpos)
     {
         onTileBreakStart?.Invoke(data, cellpos);
     }
     //-----------------------------
-    public static event Action<(TileData, TileBase), Vector3Int> onTileBreakEnd;
-    public static void TriggerTileBreakEnd((TileData, TileBase) data, Vector3Int cellpos)
+    public static event Action<(ItemData, TileBase), Vector3Int> onTileBreakEnd;
+    public static void TriggerTileBreakEnd((ItemData, TileBase) data, Vector3Int cellpos)
     {
         onTileBreakEnd?.Invoke(data, cellpos);
     }

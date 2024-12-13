@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6432ea3b45e3d9f4dbf71e0ee4814e98, type: 3}
   m_Name: leaves
   m_EditorClassIdentifier: 
+  ID: 2
+  UIprefabe: {fileID: 6578686264223804872, guid: e9c4dc74d606d0746882010f18820be6, type: 3}
+  worldPrefabe: {fileID: 7185202663553053041, guid: 01769744c3017624aae62e4a73721ce2, type: 3}
+  dimention: {x: 1, y: 1}
   tiles:
   - {fileID: 11400000, guid: d9b0d3f5380cfda479553e630ed8d7ab, type: 2}
   - {fileID: 11400000, guid: 56a2275a5cfa46b4ea3938788e070596, type: 2}

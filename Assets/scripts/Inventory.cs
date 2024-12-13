@@ -7,14 +7,14 @@ using UnityEngine;
 public class inventoryItem 
 {
 
-    public inventoryItem(TileData data, int count)
+    public inventoryItem(ItemData data, int count)
     {
         itemData = data;
         numberOfTheItem = count;
 
     }
     [SerializeField]
-    public TileData itemData;
+    public ItemData itemData;
     [SerializeField]
 
     public int numberOfTheItem;
@@ -43,7 +43,7 @@ public class Inventory : ScriptableObject
 
 
 
-    public void deleteItem(TileData data)
+    public void deleteItem(ItemData data)
     {
         int foundIndex = items.FindIndex((a) => a.itemData == data);
         if (foundIndex != -1)
@@ -67,7 +67,7 @@ public class Inventory : ScriptableObject
 
 
 
-    public void addItem(TileData data)
+    public void addItem(ItemData data)
     {
         int foundIndex = items.FindIndex((a) => a.itemData == data);
         if (foundIndex == -1)

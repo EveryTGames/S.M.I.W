@@ -2,9 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(fileName = "TileData", menuName = "TileData", order = 0)]
+[CreateAssetMenu(fileName = "ItemData", menuName = "ItemData", order = 0)]
 [Serializable]
-public class TileData : ScriptableObject
+public class ItemData : ScriptableObject
 {
 
     public int ID;

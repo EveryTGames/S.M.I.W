@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CustomEditor(typeof(TileData))]
+[CustomEditor(typeof(ItemData))]
 public class TileDataEditor : Editor
 {
     private string tileNamePrefix = "World-Tiles_"; // Prefix for the tile sprite names
@@ -14,13 +14,13 @@ public class TileDataEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        // Render default inspector properties for TileData (like Name, tiles, etc.)
+        // Render default inspector properties for ItemData (like Name, tiles, etc.)
         DrawDefaultInspector();
 
         // Iterate through all selected objects (targets) using SerializedObject
         foreach (SerializedObject serializedObj in serializedObject.targetObjects.Select(t => new SerializedObject(t)))
         {
-            TileData tileData = (TileData)serializedObj.targetObject;
+            ItemData ItemData = (ItemData)serializedObj.targetObject;
 
             serializedObj.Update(); // Update the serialized object
 
@@ -57,16 +57,16 @@ public class TileDataEditor : Editor
             if (GUILayout.Button(isRemoveMode ? "Remove Tiles" : "Assign Tiles"))
             {
                 if (isRemoveMode)
-                    RemoveTileVariations(serializedObj, tileData);
+                    RemoveTileVariations(serializedObj, ItemData);
                 else
-                    AssignTileVariations(serializedObj, tileData);
+                    AssignTileVariations(serializedObj, ItemData);
             }
 
             serializedObj.ApplyModifiedProperties(); // Apply the changes to the serialized object
         }
     }
 
-    private void AssignTileVariations(SerializedObject serializedObj, TileData tileData)
+    private void AssignTileVariations(SerializedObject serializedObj, ItemData ItemData)
     {
         string[] guids = AssetDatabase.FindAssets("t:TileBase");
         List<TileBase> matchedTiles = new List<TileBase>();
@@ -86,31 +86,31 @@ public class TileDataEditor : Editor
 
         if (appendToExisting)
         {
-            var existingTiles = tileData.tiles != null ? tileData.tiles.ToList() : new List<TileBase>();
+            var existingTiles = ItemData.tiles != null ? ItemData.tiles.ToList() : new List<TileBase>();
             existingTiles.AddRange(matchedTiles.Except(existingTiles)); // Avoid duplicates
-            tileData.tiles = existingTiles.ToArray();
+            ItemData.tiles = existingTiles.ToArray();
         }
         else
         {
-            tileData.tiles = matchedTiles.ToArray();
+            ItemData.tiles = matchedTiles.ToArray();
         }
 
         serializedObj.ApplyModifiedProperties(); // Apply the changes to the serialized object
 
-        EditorUtility.SetDirty(tileData);
+        EditorUtility.SetDirty(ItemData);
 
-        Debug.Log($"Assigned {matchedTiles.Count} tiles to {tileData.Name}.");
+        Debug.Log($"Assigned {matchedTiles.Count} tiles to {ItemData.Name}.");
     }
 
-    private void RemoveTileVariations(SerializedObject serializedObj, TileData tileData)
+    private void RemoveTileVariations(SerializedObject serializedObj, ItemData ItemData)
     {
-        if (tileData.tiles == null || tileData.tiles.Length == 0)
+        if (ItemData.tiles == null || ItemData.tiles.Length == 0)
         {
             Debug.LogWarning("No tiles to remove!");
             return;
         }
 
-        var existingTiles = tileData.tiles.ToList();
+        var existingTiles = ItemData.tiles.ToList();
         var tilesToRemove = new List<TileBase>();
 
         foreach (var tile in existingTiles)
@@ -126,12 +126,12 @@ public class TileDataEditor : Editor
             existingTiles.Remove(tile);
         }
 
-        tileData.tiles = existingTiles.ToArray();
+        ItemData.tiles = existingTiles.ToArray();
         serializedObj.ApplyModifiedProperties(); // Apply the changes to the serialized object
 
-        EditorUtility.SetDirty(tileData);
+        EditorUtility.SetDirty(ItemData);
 
-        Debug.Log($"Removed {tilesToRemove.Count} tiles from {tileData.Name}.");
+        Debug.Log($"Removed {tilesToRemove.Count} tiles from {ItemData.Name}.");
     }
 
     private bool IsInRanges(string tileName)

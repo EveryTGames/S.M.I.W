@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6432ea3b45e3d9f4dbf71e0ee4814e98, type: 3}
   m_Name: grass
   m_EditorClassIdentifier: 
+  ID: 1
+  UIprefabe: {fileID: 6832354705550214456, guid: 3943ee22b4b235446b8e6449c3971e13, type: 3}
+  worldPrefabe: {fileID: 7185202663553053041, guid: 971eeb8933ed6b840a158128017ea899, type: 3}
+  dimention: {x: 1, y: 1}
   tiles:
   - {fileID: 11400000, guid: 411444730fca8174b813aa6f753629ef, type: 2}
   - {fileID: 11400000, guid: a99bd0fb65bd00e44980d7b28a2b2bac, type: 2}

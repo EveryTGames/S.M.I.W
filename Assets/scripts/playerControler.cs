@@ -172,18 +172,21 @@ public class playerControler : MonoBehaviour
         forwardHead = state;
     }
 
-    void OnTileBreakEnd((TileData, TileBase) data, Vector3Int cellPos)
+    void OnTileBreakEnd((ItemData, TileBase) data, Vector3Int cellPos)
     {
         inventory.addItem(data.Item1);
+        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        pos.z = 0;
+        Instantiate(data.Item1.worldPrefabe).transform.position = pos;
 
     }
 
-    void OnItemDataRetrived(List<(TileData, TileBase)> datas, Vector3Int cellpos)
+    void OnItemDataRetrived(List<(ItemData, TileBase)> datas, Vector3Int cellpos)
     {
 
         if (Input.GetKey(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse0))
         {
-            foreach ((TileData, TileBase) data in datas)
+            foreach ((ItemData, TileBase) data in datas)
             {
                 if (data.Item1.breakable)
                 {

@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "itemdata", menuName = "inventory/newitem")]
 
 [Serializable]
-public class ItemData : ScriptableObject
+public class ItemDa : ScriptableObject
 {
     //no prefab for each item here as it is in the inventoryHolder, i will just save the id which is the index in the allItems array
   public string itemname;
