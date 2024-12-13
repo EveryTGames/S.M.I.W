@@ -6,6 +6,14 @@ using UnityEngine.Tilemaps;
 [Serializable]
 public class TileData : ScriptableObject
 {
+
+    public int ID;
+
+    public GameObject UIprefabe;
+    public GameObject worldPrefabe;// for when switching between the inventory and the world, you can maje it so taht when holding the item inside the borders of the inventory, it destroyes the instantiated world prefab and puts the ui prefabe in its place, and vise versa
+
+    public Vector2 dimention;
+
     [Tooltip("the tiles that will carry this data")]
     public TileBase[] tiles; // the tiles that will carry this data
     //---------------------------
@@ -25,6 +33,9 @@ public class TileData : ScriptableObject
     [Tooltip("is this tile breakable?")]
 
     public bool breakable;
+
+
+
     public override string ToString()
     {
         return base.ToString();

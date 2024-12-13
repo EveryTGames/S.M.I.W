@@ -5,14 +5,17 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - slot
+  - ok
+  - panel
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - player
   - Water
   - UI
-  - 
+  - items
   - 
   - 
   - 

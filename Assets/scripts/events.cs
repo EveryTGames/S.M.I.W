@@ -98,6 +98,72 @@ public static class events
     {
         onMouseDown?.Invoke(cellPos);
     }
-    
+    // end ----------------------------------------------------------------------------
+
+    public static event Action<bool> onInventoryToggle;
+    public static void TriggerInventoryToggle(bool triggerTo)
+    {
+        onInventoryToggle?.Invoke(triggerTo);
+    }
+    //-------------------
+    public static event Action<Transform> onItemDroppedInUI;
+    public static void TriggerItemDroppedInUI(Transform itemTransform)
+    {
+        onItemDroppedInUI?.Invoke(itemTransform);
+    }
+    public static event Action<Transform> onItemDroppedInWorld;
+    public static void TriggerItemDroppedInWorld(Transform itemTransform)
+    {
+        onItemDroppedInWorld?.Invoke(itemTransform);
+    }
+    public static event Action<Transform> onItemDraggingInWorld;
+    public static void TriggerItemDraggingInWorld(Transform itemTransform)
+    {
+        onItemDraggingInWorld?.Invoke(itemTransform);
+    }
+    public static event Action<Transform> onItemDraggingInUI;
+    public static void TriggerItemDraggingInUI(Transform itemTransform)
+    {
+        onItemDraggingInUI?.Invoke(itemTransform);
+    }
+    public static event Action<Transform> onItemPickedInWorld;
+    public static void TriggerItemPickedInWorld(Transform itemTransform)
+    {
+        onItemPickedInWorld?.Invoke(itemTransform);
+    }
+    public static event Action<Transform> onItemPickedInUI;
+    public static void TriggerItemPickedInUI(Transform itemTransform)
+    {
+        onItemPickedInUI?.Invoke(itemTransform);
+    }
+    public static event Action<Transform, Action<Transform>> onItemWorldToUI;
+    public static Transform TriggerItemWorldToUI(Transform itemTransform)
+    {
+        Transform newTransform = null;
+        onItemWorldToUI?.Invoke(itemTransform, (updatedTransform) =>
+        {
+            // You can handle the updated transform after the event is raised
+            newTransform = updatedTransform;
+        });
+        return newTransform;
+    }
+    public static event Action<Transform,Action<Transform>> onItemUIToWorld;
+    public static Transform TriggerItemUIToWorld(Transform itemTransform)
+    {
+        Transform newTransform = null;
+
+        onItemUIToWorld?.Invoke(itemTransform, (updatedTransform) =>
+        {
+            // You can handle the updated transform after the event is raised
+            newTransform = updatedTransform;
+        });
+        return newTransform;
+    }
+
+
+
+
+    //--------------------------------------------------------------------------------
+
 
 }

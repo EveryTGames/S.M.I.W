@@ -23,6 +23,7 @@ public class tileManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        onInventoryToggle += OnInventoryToggle;
         onTileLeave += OnTileLeave;
         onMouseUp += OnMouseUp;
         onMouseDown += OnMouseDown;
@@ -38,12 +39,20 @@ public class tileManager : MonoBehaviour
     Vector3Int lastCellPos2 = new Vector3Int();
 
 
-
-
+    bool enableTileManuplation = true;
+    void OnInventoryToggle(bool toggleTo)
+    {
+        enableTileManuplation = !toggleTo;
+    }
 
     // Update is called once per frame
-    void Update()
+    void Update() // this is the responsible for all the tile manuiplation methods invokation
     {
+
+        if(!enableTileManuplation)
+        {
+            return;
+        }
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             TriggerMouseUp();
@@ -167,13 +176,13 @@ public class tileManager : MonoBehaviour
 
     }
 
-   static Sequence sequence;
+    static Sequence sequence;
     int ff = 0;
     void OnTileBreakStart((TileData, TileBase) data, Vector3Int cellPos)
     {
         if (sequence != null)
         {
-           // Debug.Log(sequence.intId+ " " + data.Item2);
+            // Debug.Log(sequence.intId+ " " + data.Item2);
             return;
         }
         //Debug.Log("in the start tile break ");
@@ -228,8 +237,8 @@ public class tileManager : MonoBehaviour
     {
         if (sequence != null && sequence.IsPlaying())
         {
-           // Debug.Log("it has been killed");
-            DOTween.Kill(ff-1);
+            // Debug.Log("it has been killed");
+            DOTween.Kill(ff - 1);
 
         }
     }

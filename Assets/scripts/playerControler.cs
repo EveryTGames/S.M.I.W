@@ -9,11 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-   
 
- 
+
+
 public class playerControler : MonoBehaviour
 {
+    [SerializeField] GameObject inventoryObject;
 
     public static playerControler pc; //not needed currently 
     bool grounded = false;
@@ -22,7 +23,7 @@ public class playerControler : MonoBehaviour
     Animator an;
     Rigidbody2D rb;
 
-   [SerializeField] Inventory inventory;
+    [SerializeField] Inventory inventory;
     private void Awake()
     {
         if (pc == null)
@@ -33,7 +34,7 @@ public class playerControler : MonoBehaviour
         {
             Debug.LogWarning("multiple player controller ditected");
         }
-        
+
     }
     // Start is called before the first frame update
     void Start()
@@ -50,12 +51,19 @@ public class playerControler : MonoBehaviour
         onForwardHeadCheck += OnForwardHeadCheck;
         onItemDataRetrived += OnItemDataRetrived;
     }
+
     [SerializeField] float speed = 0.1f;
     [SerializeField] float jump_Force = 10f;
     // Update is called once per frame
     float x;
     void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnityEditor.EditorWindow.focusedWindow.maximized = !UnityEditor.EditorWindow.focusedWindow.maximized;
+        }
+#endif
         if (roundTo1(rb.velocity.x) != 0)
         {
 
@@ -75,7 +83,12 @@ public class playerControler : MonoBehaviour
         {
             Application.Quit();
         }
-
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            bool toggleTo = !inventoryObject.activeSelf;
+            inventoryObject.SetActive(toggleTo);
+            TriggerInventoryToggle(toggleTo);
+        }
 
     }
 
@@ -162,7 +175,7 @@ public class playerControler : MonoBehaviour
     void OnTileBreakEnd((TileData, TileBase) data, Vector3Int cellPos)
     {
         inventory.addItem(data.Item1);
-        
+
     }
 
     void OnItemDataRetrived(List<(TileData, TileBase)> datas, Vector3Int cellpos)
