@@ -5,6 +5,36 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static events;
+using System.IO;
+using System.Text;
+using System.Linq;
+
+
+
+
+
+[Serializable]
+public class SavedPowerUp
+{
+    public List<ItemEntry> items;  // Store as a list (Unity can't serialize Dictionary)
+
+    public SavedPowerUp(Dictionary<ItemData, float> dictionary)
+    {
+        items = new List<ItemEntry>();
+        foreach (var kvp in dictionary)
+        {
+            items.Add(new ItemEntry { itemID = kvp.Key.ID, multiplier = kvp.Value });
+        }
+    }
+}
+
+[Serializable]
+public class ItemEntry
+{
+    public int itemID;
+    public float multiplier;
+}
+
 
 //-----------------------------------------------------------------------------
 //the slot must have a slot tag and the items must have ok tag
@@ -15,6 +45,9 @@ public class DragAndDrop : MonoBehaviour
     public Transform theMainContentViewer;
     public Transform itemTransfareHolder; // for putting the item in while transfaring u need tomake it the last item in the inventory viewr, whcih means eevery inventory u instantaite it needs to be sibking index 0
     Transform oldParent;
+    float OldRotation;
+    Vector2 oldDimention;
+
 
 
 
@@ -37,12 +70,26 @@ public class DragAndDrop : MonoBehaviour
 
         onItemWorldToUI += OnItemWorldToUI;
         onItemUIToWorld += OnItemUIToWorld;
+        onItemDraggingInUI += OnItemDraggingInUI;
         //Debug.Log(Rstep);
     }
+    //u stopped here -------------------------------------------------- u will add something to change to the first rotation state
+    // u will need to optimiz this (ram) -------------------------------------------------------------------------------------
     void redoTheParent(Transform item)
     {
         item.SetParent(oldParent, true);
+        item.eulerAngles = new Vector3 { z = OldRotation };
+        item.GetComponent<items>().ZRotation = (int)OldRotation;
+        item.GetComponent<items>().Dimention = oldDimention;
 
+    }
+    void OnItemDraggingInUI(Transform itemTransform)
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            itemTransform.GetComponent<items>().Rotate();
+
+        }
 
     }
     void OnItemUIToWorld(Transform target, Action<Transform> callBack)
@@ -73,6 +120,79 @@ public class DragAndDrop : MonoBehaviour
         }
 
         callBack?.Invoke(target);
+
+    }
+
+
+    void saveTheDict(Dictionary<ItemData, float> allPowerUpsItems)
+    {
+        SavedPowerUp savedItems = new SavedPowerUp(allPowerUpsItems);
+
+        string json = JsonUtility.ToJson(savedItems, true);
+
+        string filePath = Path.Combine(Application.dataPath, "Resources/" + "powerUps.txt");
+        File.WriteAllText(filePath, json);
+
+        Debug.Log("Dictionary saved at: " + filePath);
+    }
+    //if add that means the item is being added to the inventory
+    void save(inventoryHolder inventoryholder, ItemData _itemData, bool ADD)
+    {
+        inventory _inventory = inventoryholder._inventory;
+        if (_inventory.alllowItemUse)
+        {
+
+            items[] hi;
+            hi = inventoryholder.save();
+            if (hi != null)
+            {
+
+                float EffectMultiplier;
+                if (_itemData.Usable)
+                {
+                    foreach (ItemData itemData in _itemData.EffectedItems)
+                    {
+                        if (ADD)
+                        {
+
+
+                            if (inventory.AllPowerUpsItems.TryGetValue(itemData, out EffectMultiplier))
+                            {
+
+                                inventory.AllPowerUpsItems[itemData] *= _itemData.Multiplier;
+                            }
+                            else
+                            {
+                                inventory.AllPowerUpsItems.Add(itemData, _itemData.Multiplier);
+                            }
+                        }
+                        else
+                        {
+                            if (inventory.AllPowerUpsItems.TryGetValue(itemData, out EffectMultiplier))
+                            {
+
+                                inventory.AllPowerUpsItems[itemData] /= _itemData.Multiplier;
+                                if (inventory.AllPowerUpsItems[itemData] == 1)
+                                {
+                                    inventory.AllPowerUpsItems.Remove(itemData);
+                                }
+                            }
+
+                        }
+                    }
+                    Debug.Log("nuumber of the list items : " + inventory.AllPowerUpsItems.Count);
+                    if (inventory.AllPowerUpsItems.Count != 0)
+                        Debug.Log("first item " + inventory.AllPowerUpsItems.First());
+                    saveTheDict(inventory.AllPowerUpsItems);
+                }
+
+
+            }
+        }
+        else
+        {
+            inventoryholder.save();
+        }
 
     }
     bool world = false;
@@ -133,15 +253,15 @@ public class DragAndDrop : MonoBehaviour
 
 
                 // Debug.Log(results2[1].gameObject.name);
-                if (check(results2[0].gameObject.GetComponent<items>().data.dimention, results2[1].gameObject.transform.position, out result))
-                {//                                                                       the slot ^
+                if (check(results2[0].gameObject.GetComponent<items>().Dimention, results2[1].gameObject.transform.position, out result))
+                {//                                                                                                                   the slot ^
 
                     // taget.position = results2[1].gameObject.transform.position - toSub;
                     taget.SetParent(results2[1].gameObject.transform.parent.GetChild((results2[1].gameObject.transform.parent.childCount - 1)));
-                    //u stopped here
+                    //u stopped here (old)
                     taget.position = result;
                     yield return null;
-                    results2[1].gameObject.transform.parent.GetComponent<inventoryHolder>().save();
+                    save(results2[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
 
 
                     //Debug.Log(result);
@@ -153,7 +273,7 @@ public class DragAndDrop : MonoBehaviour
                     //no enough space
                     redoTheParent(taget);
                     yield return null;
-                    results[1].gameObject.transform.parent.GetComponent<inventoryHolder>().save();
+                    save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
                 }
 
 
@@ -167,7 +287,7 @@ public class DragAndDrop : MonoBehaviour
 
 
                 yield return null;
-                results[1].gameObject.transform.parent.GetComponent<inventoryHolder>().save();
+                save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
                 //there are no slot
                 //Debug.Log("heeeeerereeee");
             }
@@ -193,7 +313,7 @@ public class DragAndDrop : MonoBehaviour
             try
             {
 
-                results[1].gameObject.transform.parent.GetComponent<inventoryHolder>().save();
+                save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
             }
             catch (Exception e)
             {
@@ -202,7 +322,7 @@ public class DragAndDrop : MonoBehaviour
             //  Debug.Log("heeeeerereeeessedwe2");
 
         }
-        try
+        try // ----------------------------------------------------------- important u need to check if the position inside the ground so the things doesnt get lost in the ground and be teleported above it
         {
 
             results2[0].gameObject.GetComponent<Image>().raycastTarget = true;
@@ -589,8 +709,10 @@ public class DragAndDrop : MonoBehaviour
                 { //the item   ^                    the slot ^
                     world = false;
                     oldParent = hit.transform.parent;
+                    OldRotation = hit.transform.eulerAngles.z;
+                    oldDimention = hit.GetComponent<items>().Dimention;
                     hit.transform.SetParent(itemTransfareHolder, true); // temprorarly putting it there
-                    results[1].gameObject.transform.parent.GetComponent<inventoryHolder>().save();
+                    save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), hit.GetComponent<items>().data, false);
                     StartCoroutine(FollowMouse(hit.transform, toSub));
                 }
 
@@ -606,6 +728,8 @@ public class DragAndDrop : MonoBehaviour
                 if (hit.collider != null && hit.collider.CompareTag("ok"))
                 {
                     oldParent = hit.transform.parent;
+                    OldRotation = hit.transform.eulerAngles.z;
+                    oldDimention = hit.transform.GetComponent<items>().Dimention;
                     //Debug.Log("hit in the 2d World " + hit.collider.name);
                     StartCoroutine(FollowMouse(hit.transform, Vector3.zero));
 

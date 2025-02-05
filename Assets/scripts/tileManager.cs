@@ -68,6 +68,7 @@ public class tileManager : MonoBehaviour
         Vector3Int cellpos2 = tilemaps[0].WorldToCell(mouseposition);
         if (Input.GetKey(KeyCode.Mouse0))
         {
+            //Debug.Log("sajwakwj a "+ cellpos2);
             TriggerMouseDown(cellpos2);
         }
 
@@ -176,9 +177,10 @@ public class tileManager : MonoBehaviour
 
     }
 
+    
     static Sequence sequence;
     int ff = 0;
-    void OnTileBreakStart((ItemData, TileBase) data, Vector3Int cellPos)
+    void OnTileBreakStart((ItemData, TileBase) data, Vector3Int cellPos,float currentUsedMultiplier)
     {
         if (sequence != null)
         {
@@ -187,7 +189,7 @@ public class tileManager : MonoBehaviour
         }
         //Debug.Log("in the start tile break ");
         TileBase[] animationFrames = effectsAnimations.BreakingAnimationFrames;
-        float frameDuration = data.Item1.TimeToBreak / animationFrames.Length;
+        float frameDuration = data.Item1.TimeToBreak / (animationFrames.Length * currentUsedMultiplier);
         sequence = DOTween.Sequence();
         sequence.intId = ff++;
 

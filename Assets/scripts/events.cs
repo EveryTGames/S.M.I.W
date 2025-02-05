@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static inventory;
 
 public static class events
 {
@@ -33,7 +34,10 @@ public static class events
     public static event Action<List<(ItemData, TileBase)>, Vector3Int> onItemDataRetrived;
     public static void TriggerShowItem(List<(ItemData, TileBase)> state, Vector3Int cellpos)
     {
+       // Debug.Log("im above");
         onItemDataRetrived?.Invoke(state, cellpos);
+       // Debug.Log("im under");
+
     }
     // end of events for uiShowItemData -----------------------------------------------
 
@@ -71,10 +75,26 @@ public static class events
 
     //start of events for breaking --------------------------------------------------
 
-    public static event Action<(ItemData, TileBase), Vector3Int> onTileBreakStart;
+    public static event Action<(ItemData, TileBase), Vector3Int, float> onTileBreakStart;
     public static void TriggerTileBreakStart((ItemData, TileBase) data, Vector3Int cellpos)
     {
-        onTileBreakStart?.Invoke(data, cellpos);
+        float effectMultiplaier;
+        Debug.Log("data in the trigger " + data);
+        //all power ups used items list (a list of the (itemdata effected, effect multiplayer))
+        if (AllPowerUpsItems != null)
+        {
+
+            if (!AllPowerUpsItems.TryGetValue(data.Item1, out effectMultiplaier))
+            {
+                effectMultiplaier = 1; // Default multiplier if not found
+            }
+        }
+        else
+        {
+             effectMultiplaier = 1; // Default multiplier if not found
+        }
+        Debug.Log("effect multiplier :  " + effectMultiplaier);
+        onTileBreakStart?.Invoke(data, cellpos, effectMultiplaier);
     }
     //-----------------------------
     public static event Action<(ItemData, TileBase), Vector3Int> onTileBreakEnd;
@@ -147,7 +167,7 @@ public static class events
         });
         return newTransform;
     }
-    public static event Action<Transform,Action<Transform>> onItemUIToWorld;
+    public static event Action<Transform, Action<Transform>> onItemUIToWorld;
     public static Transform TriggerItemUIToWorld(Transform itemTransform)
     {
         Transform newTransform = null;

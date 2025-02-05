@@ -34,6 +34,19 @@ public class ItemData : ScriptableObject
 
     public bool breakable;
 
+     [Tooltip("is this tile usable? if usable then time to break is the number of use times before it breaks")]
+
+    public bool Usable;
+
+
+    [Tooltip("the multiplier this tool will use if useable")]
+
+    public float Multiplier;
+
+      [Tooltip("the Effected Items this tool will be effective on if useable (if empty then all items)")]
+
+    public ItemData[] EffectedItems;
+
 
 
     public override string ToString()

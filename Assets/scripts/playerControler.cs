@@ -8,6 +8,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using static inventory;
 
 
 
@@ -92,8 +93,19 @@ public class playerControler : MonoBehaviour
 
     }
 
+
+[Serializable]
+public class PowerUpEntry
+{
+    public ItemData itemData;
+    public float multiplier;
+}
+
+  
     void FixedUpdate()
     {
+ 
+
         an.SetFloat("yVelocity", roundTo1(rb.velocity.y));
 
         //control the animation --------------------------------------
@@ -190,6 +202,8 @@ public class playerControler : MonoBehaviour
             {
                 if (data.Item1.breakable)
                 {
+
+
                     TriggerTileBreakStart(data, cellpos);
                 }
             }
