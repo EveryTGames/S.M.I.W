@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using static inventory;
 
+
+//it contains all the events used in teh game
 public static class events
 {
     //start of events for playerControler --------------------------------------------
@@ -81,17 +81,17 @@ public static class events
         float effectMultiplaier;
         Debug.Log("data in the trigger " + data);
         //all power ups used items list (a list of the (itemdata effected, effect multiplayer))
-        if (AllPowerUpsItems != null)
+        if (inventory.AllPowerUpsItems != null)
         {
 
-            if (!AllPowerUpsItems.TryGetValue(data.Item1, out effectMultiplaier))
+            if (!inventory.AllPowerUpsItems.TryGetValue(data.Item1, out effectMultiplaier))
             {
                 effectMultiplaier = 1; // Default multiplier if not found
             }
         }
         else
         {
-             effectMultiplaier = 1; // Default multiplier if not found
+             effectMultiplaier = 1; // Default multiplier if empty
         }
         Debug.Log("effect multiplier :  " + effectMultiplaier);
         onTileBreakStart?.Invoke(data, cellpos, effectMultiplaier);

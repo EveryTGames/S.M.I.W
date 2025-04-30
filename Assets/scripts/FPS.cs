@@ -1,8 +1,8 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//it shows the FPS on teh screen (must be in build mode for stable results)
 public class FPS : MonoBehaviour
 {
    

@@ -1,14 +1,14 @@
 
 using UnityEngine;
 
-using static events;
+
 
 using DG.Tweening;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using static inventory;
+
 
 
 
@@ -24,7 +24,7 @@ public class playerControler : MonoBehaviour
     Animator an;
     Rigidbody2D rb;
 
-    [SerializeField] Inventory inventory;
+    
     private void Awake()
     {
         if (pc == null)
@@ -46,11 +46,11 @@ public class playerControler : MonoBehaviour
 
 
         //subscribe to events
-        onTileBreakEnd += OnTileBreakEnd;
-        onGroundCheck += OnGroundCheck;
-        onForwardLegCheck += OnForwardLegCheck;
-        onForwardHeadCheck += OnForwardHeadCheck;
-        onItemDataRetrived += OnItemDataRetrived;
+        events.onTileBreakEnd += OnTileBreakEnd;
+        events.onGroundCheck += OnGroundCheck;
+        events.onForwardLegCheck += OnForwardLegCheck;
+        events.onForwardHeadCheck += OnForwardHeadCheck;
+       events.onItemDataRetrived += OnItemDataRetrived;
     }
 
     [SerializeField] float speed = 0.1f;
@@ -88,7 +88,7 @@ public class playerControler : MonoBehaviour
         {
             bool toggleTo = !inventoryObject.activeSelf;
             inventoryObject.SetActive(toggleTo);
-            TriggerInventoryToggle(toggleTo);
+            events.TriggerInventoryToggle(toggleTo);
         }
 
     }
@@ -186,7 +186,7 @@ public class PowerUpEntry
 
     void OnTileBreakEnd((ItemData, TileBase) data, Vector3Int cellPos)
     {
-        inventory.addItem(data.Item1);
+        
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         pos.z = 0;
         Instantiate(data.Item1.worldPrefabe).transform.position = pos;
@@ -204,7 +204,7 @@ public class PowerUpEntry
                 {
 
 
-                    TriggerTileBreakStart(data, cellpos);
+                    events.TriggerTileBreakStart(data, cellpos);
                 }
             }
         }

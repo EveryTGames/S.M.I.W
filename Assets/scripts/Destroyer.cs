@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+//i cant remember what this was destroying
 public class Destroyer : MonoBehaviour
 {
     // Start is called before the first frame update

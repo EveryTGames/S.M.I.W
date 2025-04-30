@@ -30,7 +30,7 @@ public class tileManager : MonoBehaviour
         onTileBreakStart += OnTileBreakStart;
         onTileHoverStart += OnTileHoverStart;
     }
-    [SerializeField] float steadyThreshold = 1f;
+    [SerializeField] float steadyThreshold = 0.01f;
     public float timeSinceTheLastSteady = 0;
     bool waitingForTheNextMove = false; // if true that means the mouse didnt movce since the last show of info
     List<(ItemData, TileBase)> clickedTileDatas = new List<(ItemData, TileBase)>();

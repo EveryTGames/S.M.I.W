@@ -682,7 +682,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryObject: {fileID: 140326561}
-  inventory: {fileID: 11400000, guid: 4f7e399cf5f3bbf4cb676a752153472c, type: 2}
   speed: 988
   jump_Force: 18070
 --- !u!114 &193271583
@@ -7401,7 +7400,7 @@ GameObject:
   m_Component:
   - component: {fileID: 574857184}
   - component: {fileID: 574857185}
-  - component: {fileID: 574857186}
+  - component: {fileID: 574857187}
   m_Layer: 3
   m_Name: forward_head_Checker
   m_TagString: Untagged
@@ -7459,7 +7458,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.19
---- !u!114 &574857186
+--- !u!114 &574857187
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7468,10 +7467,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 574857183}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3bb08e6138de6468e4aa790d2b2bc1, type: 3}
+  m_Script: {fileID: 11500000, guid: b0bc371eff5893b4db91b95b28b58d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WTC: 2
   compareTag: Ground
 --- !u!1 &619394800
 GameObject:
@@ -7565,7 +7563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 802589325}
   - component: {fileID: 802589326}
-  - component: {fileID: 802589327}
+  - component: {fileID: 802589328}
   m_Layer: 3
   m_Name: forward_leg_Checker
   m_TagString: Untagged
@@ -7623,7 +7621,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.19
---- !u!114 &802589327
+--- !u!114 &802589328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7632,10 +7630,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 802589324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3bb08e6138de6468e4aa790d2b2bc1, type: 3}
+  m_Script: {fileID: 11500000, guid: 42dd8e515421d524db0151b8aa908194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WTC: 1
   compareTag: Ground
 --- !u!1001 &813746150
 PrefabInstance:
@@ -9214,7 +9211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133067463}
   - component: {fileID: 1133067465}
-  - component: {fileID: 1133067464}
+  - component: {fileID: 1133067466}
   m_Layer: 3
   m_Name: ground_Checker
   m_TagString: Untagged
@@ -9237,20 +9234,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1163371981}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1133067464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1133067462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3bb08e6138de6468e4aa790d2b2bc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WTC: 0
-  compareTag: Ground
 --- !u!58 &1133067465
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9286,6 +9269,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.2
+--- !u!114 &1133067466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133067462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19ec6784c3e892242b28d58a9fcfd808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  compareTag: Ground
 --- !u!1 &1154775407
 GameObject:
   m_ObjectHideFlags: 0

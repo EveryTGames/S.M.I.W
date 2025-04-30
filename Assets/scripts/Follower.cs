@@ -1,7 +1,8 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
+
+//it controlls the camera following the player
 public class Follower : MonoBehaviour
 {
 
@@ -15,6 +16,7 @@ public class Follower : MonoBehaviour
 
     private void Start()
     {
+        defaultSmoothTime = smoothTime;
         StartCoroutine(followSmoothly());
     }
     private void Update()

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+
+//animation controller for the break effect
 public class effectsAnimations : MonoBehaviour
 {
     public static TileBase[] BreakingAnimationFrames;
