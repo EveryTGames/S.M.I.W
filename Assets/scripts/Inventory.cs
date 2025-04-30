@@ -80,6 +80,7 @@ public class Inventory : ScriptableObject
         }
     }
 
+//add the open inventory here
     public override string ToString()
     {
         return base.ToString();

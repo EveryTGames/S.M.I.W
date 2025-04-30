@@ -9569,6 +9569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1261615851}
   - component: {fileID: 1261615850}
+  - component: {fileID: 1261615852}
   m_Layer: 0
   m_Name: tileManager
   m_TagString: Untagged
@@ -9593,13 +9594,6 @@ MonoBehaviour:
   - {fileID: 903062349}
   - {fileID: 1075524908}
   - {fileID: 417448367}
-  tileDatas:
-  - {fileID: 11400000, guid: aee1dbe1406ef6646a16beb36e497771, type: 2}
-  - {fileID: 11400000, guid: aa5f8898210ee8c4586629c7febe6790, type: 2}
-  - {fileID: 11400000, guid: a6649b470c6a04b4a8199d66840ac9d3, type: 2}
-  - {fileID: 11400000, guid: 049127c22f6796a46ab6e97ebfac37a3, type: 2}
-  steadyThreshold: 0.01
-  timeSinceTheLastSteady: 0
 --- !u!4 &1261615851
 Transform:
   m_ObjectHideFlags: 0
@@ -9615,6 +9609,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1261615852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261615849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b880e08373d24814aa1c0c88c3b22c5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  steadyThreshold: 0.01
+  timeSinceTheLastSteady: 0
 --- !u!224 &1271268274 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7507350165368124628, guid: 8cdacbdae28353c47baf9c1114ad6c71, type: 3}

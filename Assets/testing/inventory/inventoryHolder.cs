@@ -5,11 +5,6 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-[Serializable]
-public struct allitems
-{
-  public GameObject prefab;
-}
 
 
 
