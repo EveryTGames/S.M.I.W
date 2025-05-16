@@ -203,8 +203,8 @@ public class PowerUpEntry
                 if (data.Item1.breakable)
                 {
 
-
-                    events.TriggerTileBreakStart(data, cellpos);
+                 
+                        events.TriggerTileBreakStart(data, cellpos);
                 }
             }
         }

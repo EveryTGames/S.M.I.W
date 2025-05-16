@@ -36,10 +36,16 @@ public class ItemData : ScriptableObject
 
   public bool breakable;
 
-  [Tooltip("is this tile usable? if usable then time to break is the number of use times before it breaks")]
+  [Tooltip("is this tile usable in real world? if true then time to break is the number of use times before it breaks")]
 
-  public bool Usable;
+  public bool UsableRL;
 
+   [Tooltip("is this tile usable as a tile?")]
+
+  public bool UsableTile;
+
+[Tooltip("the script to be used when clicked if useable as a tile, add the script in ItemsScripts ")]
+  public ItemsScripts.ScriptNames script;
 
   [Tooltip("the multiplier this tool will use if useable")]
 

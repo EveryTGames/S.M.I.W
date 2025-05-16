@@ -12,6 +12,12 @@ using UnityEngine;
 public class inventoryHolder : MonoBehaviour
 {
 
+  public void DestroyTheInventory()
+  {
+    GenericInventories.unloadInventory(transform.parent.parent.parent.gameObject);
+    TileAnimator.stopLastAnimation();
+  }
+
   Dictionary<ItemData, float> loadAllPowerUpsItems()
   {
     string filePath = Path.Combine(Application.dataPath, "Resources/" + "powerUps.txt");

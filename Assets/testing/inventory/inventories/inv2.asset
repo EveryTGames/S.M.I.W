@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e5ed6a567790949818a6183c40f9e4, type: 3}
-  m_Name: PlayerInventory
+  m_Script: {fileID: 11500000, guid: 15824555f836e1049a34d4fe9e1cc4b5, type: 3}
+  m_Name: inv2
   m_EditorClassIdentifier: 
-  items: []
+  texture: {fileID: 2800000, guid: ddc0868022bf7c7438362f78c38658d6, type: 3}
+  alllowItemUse: 0

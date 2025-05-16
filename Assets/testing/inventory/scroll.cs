@@ -691,7 +691,8 @@ namespace UnityEngine.UI
         private new void Start() {
             if(raycaster == null)
             {
-                Debug.LogWarning("u need to assign the raycaster to canvas");
+                raycaster = transform.parent.GetComponent<GraphicRaycaster>();
+                Debug.LogWarning("the raycaster have been assigned automaticlly");
             }
         }
 

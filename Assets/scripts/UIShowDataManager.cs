@@ -34,7 +34,8 @@ public class UIShowDataManager : MonoBehaviour
         //The hashset idea is from chatgpt :)
         // Convert the new data to a HashSet for quick lookup
        HashSet<ItemData> newDataSet = new HashSet<ItemData>(newData.Select(tuple => tuple.Item1));
-
+       
+        
 
         // Remove items not in new data and trigger fade
         foreach (ItemData item in oldData.Keys.ToList()) // ToList() to avoid modifying the collection during iteration

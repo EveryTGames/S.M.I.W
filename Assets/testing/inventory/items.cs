@@ -7,10 +7,10 @@ using UnityEngine;
 public class items : MonoBehaviour
 {
     public ItemData data;
-    public Vector2 position;
-    public Vector2 Dimention;
-    public int ZRotation;
-   public  bool overrid = false;
+  public Vector2 position;
+  public Vector2 Dimention;
+  public int ZRotation;
+ public  bool overrid = false;
     private void Start()
     {
         if (!overrid)
@@ -29,7 +29,7 @@ public class items : MonoBehaviour
 
         }
     }
-
+        
     public void Rotate()
     {
         if (!overrid)

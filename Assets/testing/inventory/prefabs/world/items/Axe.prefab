@@ -103,6 +103,7 @@ MonoBehaviour:
   position: {x: 0, y: 0}
   Dimention: {x: 0, y: 0}
   ZRotation: 0
+  overrid: 0
 --- !u!50 &-4340729422556662226
 Rigidbody2D:
   serializedVersion: 4

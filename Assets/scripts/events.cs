@@ -78,6 +78,7 @@ public static class events
     public static event Action<(ItemData, TileBase), Vector3Int, float> onTileBreakStart;
     public static void TriggerTileBreakStart((ItemData, TileBase) data, Vector3Int cellpos)
     {
+
         float effectMultiplaier;
         Debug.Log("data in the trigger " + data);
         //all power ups used items list (a list of the (itemdata effected, effect multiplayer))
@@ -91,10 +92,11 @@ public static class events
         }
         else
         {
-             effectMultiplaier = 1; // Default multiplier if empty
+            effectMultiplaier = 1; // Default multiplier if empty
         }
         Debug.Log("effect multiplier :  " + effectMultiplaier);
         onTileBreakStart?.Invoke(data, cellpos, effectMultiplaier);
+        
     }
     //-----------------------------
     public static event Action<(ItemData, TileBase), Vector3Int> onTileBreakEnd;
@@ -117,6 +119,18 @@ public static class events
     public static void TriggerMouseDown(Vector3Int cellPos)
     {
         onMouseDown?.Invoke(cellPos);
+        Debug.Log("invoked");
+    }
+
+     // ---------------------------
+    public static event Action<(ItemData, TileBase),Vector3Int> onTileUse;
+    public static void TriggerTileUse((ItemData, TileBase) data, Vector3Int cellPos)
+    {
+                                Debug.Log("he invoked it before ");
+
+        onTileUse?.Invoke(data, cellPos);
+                                Debug.Log("he invoked it after ");
+        
     }
     // end ----------------------------------------------------------------------------
 

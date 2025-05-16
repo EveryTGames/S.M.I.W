@@ -8,6 +8,8 @@ using static events;
 using System.IO;
 using System.Text;
 using System.Linq;
+using UnityEngine.Tilemaps;
+using UnityEngine.AI;
 
 
 
@@ -59,11 +61,16 @@ public class DragAndDrop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (itemTransfareHolder == null)
+        {
+            itemTransfareHolder = transform.parent.GetChild(transform.parent.childCount - 1);
+        }
 
         if (raycaster == null)
-        {
-            Debug.LogWarning("u need to assign the raycaster to canvas");
-        }
+            {
+                raycaster = transform.parent.GetComponent<GraphicRaycaster>();
+                Debug.LogWarning("the raycaster have been assigned automaticlly");
+            }
 
 
         step = Rstep * (GameObject.Find("Canvas").transform.localScale.x);
@@ -96,9 +103,12 @@ public class DragAndDrop : MonoBehaviour
     {
         if (!world)
         {
-
+            //TODO add the logic here so that when it turned from or into the world it preserve its nameID if it was a chest, so that every chest be liike constant
             Transform ds = Instantiate(target.GetComponent<items>().data.worldPrefabe).transform;
+            ds.gameObject.name = "ss " + Time.time;
+            Debug.Log("created object "+ds.gameObject.name+ " from "+ this.transform.name);
             ds.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3 { z = 3 });
+            target.SetParent(null);
             Destroy(target.gameObject);
             target = ds;
             world = true;
@@ -148,7 +158,7 @@ public class DragAndDrop : MonoBehaviour
             {
 
                 float EffectMultiplier;
-                if (_itemData.Usable)
+                if (_itemData.UsableRL)
                 {
                     foreach (ItemData itemData in _itemData.EffectedItems)
                     {
@@ -204,19 +214,21 @@ public class DragAndDrop : MonoBehaviour
      //----------------------------------------------------------------------------------------------------------------------------------------------------
         while (!Input.GetMouseButtonUp(0))
         {
-            if (Input.mousePosition.x < widthFitter.mostLeft && !world)
-            {//converted the item from ui to world
-             //add later an object in the outside world to store the objects that are on the floor  change ------------------------ important
+            bool _aboveUI = doRayCast(Input.mousePosition, -1);
+           
+            if (!_aboveUI && !world)
+                {//converted the item from ui to world
+                 //add later an object in the outside world to store the objects that are on the floor  change ------------------------ important
 
-                taget = TriggerItemUIToWorld(taget);
-                yield return null;
-            }
-            else if (world && Input.mousePosition.x >= widthFitter.mostLeft)
-            {//converted the item from world to ui
-                taget = TriggerItemWorldToUI(taget);
-                yield return null;
+                    taget = TriggerItemUIToWorld(taget);
+                    yield return null;
+                }
+                else if (world && _aboveUI)
+                {//converted the item from world to ui
+                    taget = TriggerItemWorldToUI(taget);
+                    yield return null;
 
-            }
+                }
             if (world)
             {   //draging the item as a world component
                 TriggerItemDraggingInWorld(taget);
@@ -353,6 +365,7 @@ public class DragAndDrop : MonoBehaviour
 
 
     }
+    // x= (-) if u want to check if the dragged item is above ui or not
     bool doRayCast(Vector2 position, int x)
     {
         List<RaycastResult> result = new List<RaycastResult>();
@@ -361,6 +374,18 @@ public class DragAndDrop : MonoBehaviour
         eventData.position = position;
 
         raycaster.Raycast(eventData, result);
+       // Debug.Log("ui elemts under the mouse " + result.Count);
+        if (x < 0)
+        {
+            if (result.Count < 3)
+            {
+                return false; // it is not above ui
+            }
+            else
+            {
+                return true;//it is above ui
+            }
+        }
         if (result.Count > 1)
         {
             //Debug.Log($"{result[x].gameObject.CompareTag("slot")}  the name of the object that was hit {result[x].gameObject.name}");
@@ -721,7 +746,48 @@ public class DragAndDrop : MonoBehaviour
             }
             else
             {
+
                 //based on the hit world element
+                Debug.Log("hello im here");
+                Vector3 _mouseposition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                _mouseposition.z = 0;
+                Vector3Int _cellPos = tileManager.tilemapssStatic[0].WorldToCell(_mouseposition);
+                Debug.Log("hello im here " + _cellPos);
+
+                foreach (Tilemap map in tileManager.tilemapssStatic)
+                {
+
+                    ItemData _tile;
+
+
+                    TileBase _retrivedTile = map.GetTile(_cellPos);
+                    Debug.Log("hello im here " + _retrivedTile);
+
+                    // Debug.Log($"mouseposition {mouseposition} cell position {cellpos}  retrived tile {retrivedTile.name} ");
+                    if (_retrivedTile != null)
+                    {
+                        Debug.Log("hello im here " + tileManager.tileBasData.Count);
+
+
+                        if (tileManager.tileBasData.TryGetValue(_retrivedTile, out _tile))
+                        {
+                            Debug.Log("hello im here " + _tile);
+                            //TODO : remeber to when you implement the put things like chest in the tiles, to now allow to put 2 usable items in Tiles above each other
+                            if (_tile.UsableTile)
+                            {
+                                Debug.Log("he called itttttt");
+                                events.TriggerTileUse((_tile, _retrivedTile), _cellPos);
+                                Debug.Log("he called itttttt before nowwww ");
+
+                            }
+
+                        }
+                    }
+                }
+
+
+
+
 
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);

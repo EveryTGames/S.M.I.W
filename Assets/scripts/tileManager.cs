@@ -1,9 +1,92 @@
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+
+
+
+
+public class TileAnimator
+{
+    static int _animationIndex = 0;
+    public static Sequence sequence;
+
+    public TileAnimator(String animationName, (ItemData, TileBase) data, Vector3Int cellPos, bool keepLastFrame, float animationMultiplier, float? frameDuration = null, Action<(ItemData, TileBase), Vector3Int> onFinishing = null)
+    {
+        if (sequence != null)
+        {
+
+            return;
+        }
+        onFinishing = onFinishing ?? ((a, b) => { });
+
+        TileAnimations animation = effectsAnimations.AllAnimations.FirstOrDefault(tileAnimation => tileAnimation.Name == animationName);
+
+        if (animation == null)
+        {
+
+            Debug.LogError("didnt find animation " + animationName);
+            return;
+        }
+        TileBase[] animationFrames = animation.AnimationFrames;
+
+        frameDuration = frameDuration ?? data.Item1.TimeToBreak / (animationFrames.Length * animationMultiplier); //if not specified time i will just consider it for breaking animation for now
+        sequence = DOTween.Sequence();
+        sequence.intId = _animationIndex++;
+
+        // Add the frames to the sequence
+        for (int i = 0; i < animationFrames.Length; i++)
+        {
+            int frameIndex = i;
+            sequence.AppendCallback(() => tileManager.tilemapssStatic[0].SetTile(cellPos, animationFrames[frameIndex]))
+                    .AppendInterval((float)frameDuration);
+        }
+
+
+
+        // Remove the tiles
+        sequence.AppendCallback(() =>
+        {
+            if (!keepLastFrame)
+            {
+
+                tileManager.tilemapssStatic[0].SetTile(cellPos, null); // removes the last frame effect
+            }
+            onFinishing.Invoke(data, cellPos);
+            //  tileManager.findWhichTileMap(data.Item2, cellPos).SetTile(cellPos, null);
+            // events.TriggerTileBreakEnd(data, cellPos);
+        }).OnKill(() =>
+        {
+            if (!keepLastFrame)
+            {
+                tileManager.tilemapssStatic[0].SetTile(cellPos, null);
+            }
+            _animationIndex--;
+
+            sequence = null;
+
+        });
+
+    }
+
+    public static void stopLastAnimation()
+    {
+        if (sequence != null && sequence.IsPlaying())
+        {
+            // Debug.Log("it has been killed");
+            DOTween.Kill(_animationIndex - 1);
+
+        }
+    }
+
+
+
+}
 public class tileManager : MonoBehaviour
 {
     [SerializeField] List<Tilemap> tilemaps;
@@ -11,11 +94,11 @@ public class tileManager : MonoBehaviour
     public static List<Tilemap> tilemapssStatic;
     private List<ItemData> tileDatas;
 
-    Dictionary<TileBase, ItemData> tileBasData = new Dictionary<TileBase, ItemData>();
+    public static Dictionary<TileBase, ItemData> tileBasData = new Dictionary<TileBase, ItemData>();
     private void Awake()
     {
         tilemapssStatic = tilemaps;
-   
+
     }
     // Start is called before the first frame update
     void Start()
@@ -88,41 +171,24 @@ public class tileManager : MonoBehaviour
 
 
     static Sequence sequence;
-    static int ff = 0;
+
     void OnTileBreakStart((ItemData, TileBase) data, Vector3Int cellPos, float currentUsedMultiplier)
     {
-        if (sequence != null)
+        try
         {
-            // Debug.Log(sequence.intId+ " " + data.Item2);
-            return;
+
+            new TileAnimator("breakingAnimation", data, cellPos, false, currentUsedMultiplier, null, (a, b) =>
+            {
+                Debug.Log("arrived hereee");
+
+                tileManager.findWhichTileMap(data.Item2, cellPos).SetTile(cellPos, null);
+                events.TriggerTileBreakEnd(data, cellPos);
+            });
         }
-        //Debug.Log("in the start tile break ");
-        TileBase[] animationFrames = effectsAnimations.BreakingAnimationFrames;
-        float frameDuration = data.Item1.TimeToBreak / (animationFrames.Length * currentUsedMultiplier);
-        sequence = DOTween.Sequence();
-        sequence.intId = ff++;
-
-        // Add the frames to the sequence
-        for (int i = 0; i < animationFrames.Length; i++)
+        catch (Exception e)
         {
-            int frameIndex = i;
-            sequence.AppendCallback(() => tilemapssStatic[0].SetTile(cellPos, animationFrames[frameIndex]))
-                    .AppendInterval(frameDuration);
+            Debug.Log("this?? " + e);
         }
-
-
-
-        // Remove the tiles
-        sequence.AppendCallback(() =>
-        {
-            tilemapssStatic[0].SetTile(cellPos, null);
-            findWhichTileMap(data.Item2, cellPos).SetTile(cellPos, null);
-            events.TriggerTileBreakEnd(data, cellPos);
-        }).OnKill(() =>
-        {
-            tilemapssStatic[0].SetTile(cellPos, null);
-            sequence = null;
-        });
 
 
     }
@@ -138,15 +204,10 @@ public class tileManager : MonoBehaviour
 
     public static void stopBeraking()
     {
-        if (sequence != null && sequence.IsPlaying())
-        {
-            // Debug.Log("it has been killed");
-            DOTween.Kill(ff - 1);
-
-        }
+        TileAnimator.stopLastAnimation();
     }
 
-    Tilemap findWhichTileMap(TileBase tile, Vector3Int cellPos)
+    public static Tilemap findWhichTileMap(TileBase tile, Vector3Int cellPos)
     {
         foreach (Tilemap map in tilemapssStatic)
         {

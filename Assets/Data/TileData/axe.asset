@@ -21,7 +21,8 @@ MonoBehaviour:
   description: it cutes wood faster
   TimeToBreak: 30
   breakable: 0
-  Usable: 1
+  UsableRL: 1
+  UsableTile: 0
   Multiplier: 10
   EffectedItems:
   - {fileID: 11400000, guid: 049127c22f6796a46ab6e97ebfac37a3, type: 2}

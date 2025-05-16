@@ -33,6 +33,7 @@ public class tileManagerInputHandler : MonoBehaviour
     }
     private void OnMouseUpp()
     {
+        Debug.Log("can i be here?");
         tileManager.stopBeraking();
     }
 
@@ -65,7 +66,7 @@ public class tileManagerInputHandler : MonoBehaviour
         Vector3Int cellpos2 = tileManager.tilemapssStatic[0].WorldToCell(mouseposition);
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            //Debug.Log("sajwakwj a "+ cellpos2);
+            Debug.Log("the clicked mouse pottiion "+ cellpos2);
             events.TriggerMouseDown(cellpos2);
         }
 
