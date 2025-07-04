@@ -25,8 +25,9 @@ public class PixelImageLoader : MonoBehaviour
 
 
     public static bool Done = false;
-     co[] objects;
+    co[] objects;
     Color32[] map;
+    bool[][] avilableSlots;
     Texture2D texture;
     int width, height;
     public GameObject slotPrefab;
@@ -38,12 +39,19 @@ public class PixelImageLoader : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         Done = false;
         texture = inventory.texture;
-            map = texture.GetPixels32();
-            width = texture.width;
-            height = texture.height;
+        map = texture.GetPixels32();
+
+        width = texture.width;
+        height = texture.height;
+        avilableSlots = new bool[height][];
+
+        for (int i = 0; i < height; i++)
+        {
+            avilableSlots[i] = new bool[width];
+        }
         rectTransform.sizeDelta = new Vector2(width * cellSize, height * cellSize);
-            StartCoroutine(loadmap());
-        
+        StartCoroutine(loadmap());
+
     }
 
     // Update is called once per frame
@@ -62,25 +70,26 @@ public class PixelImageLoader : MonoBehaviour
     IEnumerator loadmap()
     {
         deletMap();
-       
-        for (int x = 0; x < width; x++)
+
+        for (int y = 0; y < width; y++)
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < height; x++)
             {
                 Color32 co = map[(y * width) + x];
-                
-                if(co.r == 255)
+
+                if (co.r == 255)
                 {
+                    avilableSlots[y][x] = true;
                     GameObject duf = Instantiate(slotPrefab, transform);
-                    duf.transform.SetAsFirstSibling();
+                    duf.transform.SetAsLastSibling();
                     //duf.GetComponent<RectTransform>().anchorMin = Vector2.zero;
                     //duf.GetComponent<RectTransform>().anchorMax = Vector2.zero;
                     //yield return null;
                     duf.GetComponent<RectTransform>().localPosition += new Vector3 { x = x * cellSize, y = y * cellSize };
                     //Debug.Log(duf.transform.localPosition);
-                        //new Vector2 { x = x * cellSize, y = y * cellSize } /*- new Vector2 { x = width /2,y = height/2}*/;
+                    //new Vector2 { x = x * cellSize, y = y * cellSize } /*- new Vector2 { x = width /2,y = height/2}*/;
 
-                   // Debug.Log(x+"   "+ y);
+                    // Debug.Log(x+"   "+ y);
                 }
                 else
                 {
@@ -93,13 +102,18 @@ public class PixelImageLoader : MonoBehaviour
             }
 
         }
+        GameObject itemss = new GameObject("items");
+        itemss.transform.SetParent(transform);
+        itemss.transform.localPosition = Vector3.zero;
+        itemss.transform.localScale = new Vector3(1, 1, 1);
+        itemss.transform.SetAsLastSibling();
         yield return new WaitForSeconds(0.001f);
 
         Done = true;
-        GetComponent<inventoryHolder>().load();
+        GetComponent<inventoryHolder>().load(avilableSlots);
 
     }
-   // public static bool stillDeveloping = false;
+    // public static bool stillDeveloping = false;
     void deletMap()
     {
         while (transform.childCount > 0)
@@ -109,10 +123,7 @@ public class PixelImageLoader : MonoBehaviour
             Destroy(x.gameObject);
 
         }
-        GameObject itemss = new GameObject("items");
-        itemss.transform.SetParent(transform);
-        itemss.transform.localPosition = Vector3.zero;
-        itemss.transform.localScale = new Vector3(1,1,1);
+     
 
 
 

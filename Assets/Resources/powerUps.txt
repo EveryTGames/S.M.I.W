@@ -1,8 +1,0 @@
-{
-    "items": [
-        {
-            "itemID": 3,
-            "multiplier": 10.0
-        }
-    ]
-}

@@ -13,4 +13,8 @@ public class inventory : ScriptableObject
     public bool alllowItemUse;
 
 
+    [Tooltip("if true, the items will be loaded randomly from the allitems list")]
+    public bool randomeItems = false; // if true, the items will be loaded randomly from the allitems list
+
+
 }

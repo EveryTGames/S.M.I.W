@@ -67,13 +67,13 @@ public class DragAndDrop : MonoBehaviour
         }
 
         if (raycaster == null)
-            {
-                raycaster = transform.parent.GetComponent<GraphicRaycaster>();
-                Debug.LogWarning("the raycaster have been assigned automaticlly");
-            }
+        {
+            raycaster = transform.parent.GetComponent<GraphicRaycaster>();
+            Debug.LogWarning("the raycaster have been assigned automaticlly");
+        }
 
 
-        step = Rstep * (GameObject.Find("Canvas").transform.localScale.x);
+        step = Rstep * GameObject.Find("Canvas").transform.localScale.x;
 
         onItemWorldToUI += OnItemWorldToUI;
         onItemUIToWorld += OnItemUIToWorld;
@@ -106,7 +106,7 @@ public class DragAndDrop : MonoBehaviour
             //TODO add the logic here so that when it turned from or into the world it preserve its nameID if it was a chest, so that every chest be liike constant
             Transform ds = Instantiate(target.GetComponent<items>().data.worldPrefabe).transform;
             ds.gameObject.name = "ss " + Time.time;
-            Debug.Log("created object "+ds.gameObject.name+ " from "+ this.transform.name);
+            Debug.Log("created object " + ds.gameObject.name + " from " + this.transform.name);
             ds.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3 { z = 3 });
             target.SetParent(null);
             Destroy(target.gameObject);
@@ -145,7 +145,9 @@ public class DragAndDrop : MonoBehaviour
 
         Debug.Log("Dictionary saved at: " + filePath);
     }
-    //if add that means the item is being added to the inventory
+    //if ADD is true, that means the item is being added to the inventory
+    //TODO: u will edit all these references to add the parameter of the maxtleft-right-down-top //thats wrong i think so i deleted it just to test
+
     void save(inventoryHolder inventoryholder, ItemData _itemData, bool ADD)
     {
         inventory _inventory = inventoryholder._inventory;
@@ -215,20 +217,20 @@ public class DragAndDrop : MonoBehaviour
         while (!Input.GetMouseButtonUp(0))
         {
             bool _aboveUI = doRayCast(Input.mousePosition, -1);
-           
+
             if (!_aboveUI && !world)
-                {//converted the item from ui to world
-                 //add later an object in the outside world to store the objects that are on the floor  change ------------------------ important
+            {//converted the item from ui to world
+             //TODO: add later an object in the outside world to store the objects that are on the floor  change ------------------------ important
 
-                    taget = TriggerItemUIToWorld(taget);
-                    yield return null;
-                }
-                else if (world && _aboveUI)
-                {//converted the item from world to ui
-                    taget = TriggerItemWorldToUI(taget);
-                    yield return null;
+                taget = TriggerItemUIToWorld(taget);
+                yield return null;
+            }
+            else if (world && _aboveUI)
+            {//converted the item from world to ui
+                taget = TriggerItemWorldToUI(taget);
+                yield return null;
 
-                }
+            }
             if (world)
             {   //draging the item as a world component
                 TriggerItemDraggingInWorld(taget);
@@ -256,23 +258,27 @@ public class DragAndDrop : MonoBehaviour
         eventData.position = Input.mousePosition;
         raycaster.Raycast(eventData, results2);
         Vector2 result;
+        int[] maxs;
         if (results2.Count > 1 && results2[1].gameObject.CompareTag("slot"))
         {
             results2[0].gameObject.GetComponent<Image>().raycastTarget = false;
 
             if (doRayCast(results2[1].gameObject.transform.position, 0))
             {
-
-
+                Vector3 i = results2[1].gameObject.GetComponent<RectTransform>().anchoredPosition;
+                int y = (int)i.y / 50;
+                int x = (int)i.x / 50;
+                Debug.Log("the sibling index is " + i + " " + y + " " + x);
                 // Debug.Log(results2[1].gameObject.name);
-                if (check(results2[0].gameObject.GetComponent<items>().Dimention, results2[1].gameObject.transform.position, out result))
+                if (check(results2[0].gameObject.GetComponent<items>().Dimention, results2[1].gameObject.transform.parent.GetComponent<inventoryHolder>().availableSlots, new Vector2 { x = x, y = y }, out result, out maxs))
                 {//                                                                                                                   the slot ^
 
                     // taget.position = results2[1].gameObject.transform.position - toSub;
                     taget.SetParent(results2[1].gameObject.transform.parent.GetChild((results2[1].gameObject.transform.parent.childCount - 1)));
+                    taget.GetComponent<RectTransform>().anchoredPosition = result;
                     //u stopped here (old)
-                    taget.position = result;
                     yield return null;
+                    taget.GetComponent<items>().maxs = maxs;
                     save(results2[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
 
 
@@ -281,11 +287,32 @@ public class DragAndDrop : MonoBehaviour
                 }
                 else
                 {
-                    taget.position = results[1].gameObject.transform.position - toSub;
-                    //no enough space
+                    try
+                    {
+                        taget.position = results[1].gameObject.transform.position - toSub;
+                    }
+                    catch (Exception e)
+                    {
+                        //here u want to trigger the function of changing from ui to world(implement in it that if it was world already dont do anything, just change world to true)
+                        TriggerItemUIToWorld(taget);
+                        //   Debug.Log("dropped in the world");
+
+                    }
                     redoTheParent(taget);
+
                     yield return null;
-                    save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
+                    try
+                    {
+
+                        save(results[1].gameObject.transform.parent.GetComponent<inventoryHolder>(), taget.GetComponent<items>().data, true);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    //  Debug.Log("heeeeerereeeessedwe2");
+
+
                 }
 
 
@@ -294,8 +321,8 @@ public class DragAndDrop : MonoBehaviour
             {
 
 
-                redoTheParent(taget);
                 taget.position = results[1].gameObject.transform.position - toSub;
+                redoTheParent(taget);
 
 
                 yield return null;
@@ -307,7 +334,7 @@ public class DragAndDrop : MonoBehaviour
         else
         {
             //it will trigger errpr if it came from the world and put in no slot place or not empty 
-            //there are no slot
+
             try
             {
                 taget.position = results[1].gameObject.transform.position - toSub;
@@ -374,7 +401,7 @@ public class DragAndDrop : MonoBehaviour
         eventData.position = position;
 
         raycaster.Raycast(eventData, result);
-       // Debug.Log("ui elemts under the mouse " + result.Count);
+        // Debug.Log("ui elemts under the mouse " + result.Count);
         if (x < 0)
         {
             if (result.Count < 3)
@@ -388,6 +415,8 @@ public class DragAndDrop : MonoBehaviour
         }
         if (result.Count > 1)
         {
+            Debug.Log($"okay {transform.name}");
+            //TODO: u will change this
             //Debug.Log($"{result[x].gameObject.CompareTag("slot")}  the name of the object that was hit {result[x].gameObject.name}");
             // Debug.Log(eventData.position);
             return result[x].gameObject.CompareTag("slot");
@@ -395,10 +424,33 @@ public class DragAndDrop : MonoBehaviour
         else
             return false;
     }
-    public bool right, left, up, down;
-    bool check(Vector2 dimensions, Vector2 Newslot, out Vector2 result)
+    static bool[][] availableSlots;
+    static bool isAvailableSlot(Vector2 _slotIndex)
     {
+
+        Debug.Log((int)_slotIndex.y);
+        Debug.Log((int)_slotIndex.x);
+        try
+        {
+
+            return availableSlots[(int)_slotIndex.y][(int)_slotIndex.x];
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"the slot index is out of range {e}");
+            return false;
+        }
+
+    }
+     static bool right, left, up, down;
+    //TODO: change the logoc of checking from raycast to manuplation of the available slots array (remember, dont edit this array here, it will be updated later and i added that code already)
+   public static bool check(Vector2 dimensions, bool[][] _availableSlots, Vector2 _slotIndex, out Vector2 result, out int[] _maxs)
+    {
+
+        availableSlots = _availableSlots;
+        Debug.Log($"the new slot {_slotIndex} is {availableSlots[(int)_slotIndex.x][(int)_slotIndex.y]}");
         result = Vector2.zero;
+        _maxs = new int[4];
         // Debug.Log(Newslot);
         //   Debug.Log(dimensions);
 
@@ -408,17 +460,16 @@ public class DragAndDrop : MonoBehaviour
 
         int x = 1;
         int y = 0;
-        float maxRight = 0f;
-        float maxTop = 0f;
-        float maxLeft = 0f;
-        float maxDown = 0f;
+        int indexMaxRight = 0;
+        int indexMaxTop = 0;
+        int indexMaxLeft = 0;
+        int indexMaxDown = 0;
 
-        Newslot += new Vector2 { x = step / 2, y = step / 2 };
         //this approach search in each direction if not found it revers it whith the ability to add to what it did
-        Vector2 orignalSlot = Newslot;
+        Vector2 orignalIndexSlot = _slotIndex;
 
         //Debug.Log(orignalSlot);
-        if (!doRayCast(orignalSlot, 0))
+        if (!isAvailableSlot(orignalIndexSlot))
         {
             return false;
         }
@@ -427,17 +478,17 @@ public class DragAndDrop : MonoBehaviour
             // Debug.Log("hereee");
             if (x >= dimensions.x)
             {
-                maxRight = (Newslot + Vector2.right * step * (i - 1)).x;
+                indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
                 //Debug.Log(maxRight);
 
                 break;
 
             }
             // Debug.Log("01");
-            if (!doRayCast(Newslot + Vector2.right * step * i, 0))
+            if (!isAvailableSlot(_slotIndex + Vector2.right * i))
             {
                 right = true;
-                maxRight = (Newslot + Vector2.right * step * (i - 1)).x;
+                indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
                 ////Debug.Log(maxRight);
 
 
@@ -447,24 +498,24 @@ public class DragAndDrop : MonoBehaviour
             x++;
 
         }
-        maxLeft = Newslot.x;
+        indexMaxLeft = (int)_slotIndex.x;
         if (right)
         {
             for (int i = 1; i <= dimensions.x; i++)
             {
                 if (x >= dimensions.x)
                 {
-                    maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                    indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
 
                     break;
 
                 }
                 //Debug.Log("02");
 
-                if (!doRayCast(Newslot + Vector2.left * step * i, 0))
+                if (!isAvailableSlot(_slotIndex + Vector2.left * i))
                 {
                     left = true;
-                    maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                    indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
                     break;
 
                 }
@@ -497,17 +548,17 @@ public class DragAndDrop : MonoBehaviour
 
             if (y >= dimensions.y)
             {
-                maxTop = (Newslot).y;
+                indexMaxTop = (int)(_slotIndex).y;
 
                 break;
 
             }
             //Debug.Log("03");
-
-            if (!doRayCast(Newslot += Vector2.up * step, 0))
+            _slotIndex += Vector2.up;
+            if (!isAvailableSlot(_slotIndex))
             {
                 up = true;
-                maxTop = (Newslot - Vector2.up * step).y;
+                indexMaxTop = (int)(_slotIndex - Vector2.up).y;
                 break;
 
             }
@@ -516,7 +567,7 @@ public class DragAndDrop : MonoBehaviour
 
             for (int i = 1; i <= dimensions.x; i++)
             {
-                if (Mathf.Abs((Newslot + Vector2.right * step * (i)).x) > Mathf.Abs(maxRight))
+                if (Mathf.Abs((_slotIndex + Vector2.right * (i)).x) > Mathf.Abs(indexMaxRight))
                 {
                     break;
                 }
@@ -525,18 +576,17 @@ public class DragAndDrop : MonoBehaviour
 
                 if (x >= dimensions.x)
                 {
-                    maxRight = (Newslot + Vector2.right * step * (i - 1)).x; //test
-
+                    indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
                     break;
 
                 }
                 //Debug.Log($"j  {j}   04");
                 //Debug.Log(Newslot + Vector2.right * step * i);
                 //Debug.Log("the logeofds");
-                if (!doRayCast(Newslot + Vector2.right * step * i, 0))
+                if (!isAvailableSlot(_slotIndex + Vector2.right * i))
                 {
                     right = true;
-                    maxRight = (Newslot + Vector2.right * step * (i - 1)).x;
+                    indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
 
                     break;
 
@@ -548,25 +598,25 @@ public class DragAndDrop : MonoBehaviour
             {
                 for (int i = 1; i <= dimensions.x; i++)
                 {
-                    if (Mathf.Abs((Newslot + Vector2.left * step * (i)).x) > Mathf.Abs(maxLeft))
+                    if (Mathf.Abs((_slotIndex + Vector2.left * (i)).x) > Mathf.Abs(indexMaxLeft))
                     {
                         break;
                     }
                     if (x >= dimensions.x)
                     {
-                        maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                        indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
 
                         break;
 
                     }
                     //Debug.Log("05");
 
-                    if (!doRayCast(Newslot + Vector2.left * step * i, 0))
+                    if (!isAvailableSlot(_slotIndex + Vector2.left * i))
                     {
                         left = true;
 
 
-                        maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                        indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
                         //stopped here
                         break;
 
@@ -582,7 +632,7 @@ public class DragAndDrop : MonoBehaviour
             {
                 up = true;
                 //Debug.Log($"the ;up; right {right} up {up} down {down} left {left} j {j} ");
-                maxTop = (Newslot - Vector2.up * step).y;
+                indexMaxTop = (int)(_slotIndex - Vector2.up).y;
                 right = false;
                 left = false;
                 break;
@@ -595,27 +645,27 @@ public class DragAndDrop : MonoBehaviour
 
         right = false;
         left = false;
-        maxDown = orignalSlot.y;
+        indexMaxDown = (int)orignalIndexSlot.y;
         if (up)
         {
-            Newslot = orignalSlot;
+            _slotIndex = orignalIndexSlot;
             for (int j = 1; j <= dimensions.y; j++)
             {
                 x = 1;
 
                 if (y >= dimensions.y)
                 {
-                    maxDown = (Newslot).y;
+                    indexMaxDown = (int)_slotIndex.y;
 
                     break;
 
                 }
                 //Debug.Log("06");
-
-                if (!doRayCast(Newslot += Vector2.down * step, 0))
+                _slotIndex += Vector2.down;
+                if (!isAvailableSlot(_slotIndex))
                 {
                     down = true;
-                    maxDown = (Newslot - Vector2.down * step).y;
+                    indexMaxDown = (int)(_slotIndex - Vector2.down).y;
                     break;
 
                 }
@@ -624,26 +674,26 @@ public class DragAndDrop : MonoBehaviour
 
                 for (int i = 1; i <= dimensions.x; i++)
                 {
-                    if (Mathf.Abs((Newslot + Vector2.right * step * (i)).x) > Mathf.Abs(maxRight))
+                    if (Mathf.Abs((_slotIndex + Vector2.right * (i)).x) > Mathf.Abs(indexMaxRight))
                     {
                         break;
                     }
                     if (x >= dimensions.x)
                     {
-                        maxRight = (Newslot + Vector2.right * step * (i - 1)).x;
+                        indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
 
                         break;
 
                     }
                     //Debug.Log("07");
 
-                    if (!doRayCast(Newslot + Vector2.right * step * i, 0))
+                    if (!isAvailableSlot(_slotIndex + Vector2.right * i))
                     {
 
                         //Debug.Log($"in j {j} the right was closed");
 
                         right = true;
-                        maxRight = (Newslot + Vector2.right * step * (i - 1)).x;
+                        indexMaxRight = (int)(_slotIndex + Vector2.right * (i - 1)).x;
 
                         break;
 
@@ -656,23 +706,23 @@ public class DragAndDrop : MonoBehaviour
                     //Debug.Log($"in j {j} the right was closed");
                     for (int i = 1; i <= dimensions.x; i++)
                     {
-                        if (Mathf.Abs((Newslot + Vector2.left * step * (i)).x) > Mathf.Abs(maxLeft))
+                        if (Mathf.Abs((_slotIndex + Vector2.left * (i)).x) > Mathf.Abs(indexMaxLeft))
                         {
                             break;
                         }
                         if (x >= dimensions.x)
                         {
-                            maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                            indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
 
                             break;
 
                         }
                         //Debug.Log($" j {j}  08");
 
-                        if (!doRayCast(Newslot + Vector2.left * step * i, 0))
+                        if (!isAvailableSlot(_slotIndex + Vector2.left * i))
                         {
                             left = true;
-                            maxLeft = (Newslot + Vector2.left * step * (i - 1)).x;
+                            indexMaxLeft = (int)(_slotIndex + Vector2.left * (i - 1)).x;
 
                             //Debug.Log($"in j {j} the left was closed");
 
@@ -689,7 +739,7 @@ public class DragAndDrop : MonoBehaviour
                 {
                     down = true;
                     //Debug.Log($"the ;down; right {right} up {up} down {down} left {left} j {j} ");
-                    maxDown = (Newslot - Vector2.down * step).y;
+                    indexMaxDown = (int)(_slotIndex - Vector2.down).y;
 
                     right = false;
                     left = false;
@@ -710,7 +760,15 @@ public class DragAndDrop : MonoBehaviour
         }
         else
         {
-            result = new Vector2 { x = (maxRight + maxLeft) / 2, y = (maxTop + maxDown) / 2 };
+            result = new Vector2 { x = 50 * (indexMaxRight + indexMaxLeft) / 2 + 25, y = 50 * (indexMaxTop + indexMaxDown) / 2 - 100 };
+
+            Debug.Log($"max left {indexMaxLeft} max right {indexMaxRight} max down {indexMaxDown} max top {indexMaxTop}");
+            _maxs[0] = indexMaxLeft;
+            _maxs[1] = indexMaxRight;
+            _maxs[2] = indexMaxDown;
+            _maxs[3] = indexMaxTop;
+
+
             return true;
         }
     }

@@ -10,7 +10,8 @@ public class items : MonoBehaviour
   public Vector2 position;
   public Vector2 Dimention;
   public int ZRotation;
- public  bool overrid = false;
+    public int[] maxs = new int[4];
+ public bool overrid = false;
     private void Start()
     {
         if (!overrid)
